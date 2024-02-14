@@ -27,13 +27,8 @@ namespace PDFExportHelper_apps
                         widths[i] = 4f;
 
                     table.SetWidths(widths);
-
                     table.WidthPercentage = 100;
-                    int iCol = 0;
-                    string colname = "";
-                    PdfPCell cell = new PdfPCell(new Phrase("Products"));
 
-                    cell.Colspan = dt.Columns.Count;
                     AddCellToHeader(table, "Account Number: 1501204392595001", Element.ALIGN_LEFT, colspan: 3);
                     AddCellToHeader(table, "December 31, 2018", Element.ALIGN_RIGHT, colspan: 3);
                     AddCellToHeader(table, "STATEMENT OF ACCOUNT FOR THE PERIOD OF 11-JUN-2023 TO 12-JUN-2023 FROM FINACLE", Element.ALIGN_LEFT);
