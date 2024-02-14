@@ -14,44 +14,47 @@ namespace PDFExportHelper_apps
     {
         public static void ExportToPdf(DataTable dt, string filePath_fileName)
         {
-            iTextSharp.text.Document document = new iTextSharp.text.Document();
-            PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filePath_fileName, FileMode.Create));
-            document.Open();
-            iTextSharp.text.Font font5 = iTextSharp.text.FontFactory.GetFont(FontFactory.HELVETICA, 12);
-
-            PdfPTable table = new PdfPTable(dt.Columns.Count);
-            PdfPRow row = null;
-            float[] widths = new float[dt.Columns.Count];
-            for (int i = 0; i < dt.Columns.Count; i++)
-                widths[i] = 4f;
-
-            table.SetWidths(widths);
-
-            table.WidthPercentage = 100;
-            int iCol = 0;
-            string colname = "";
-            PdfPCell cell = new PdfPCell(new Phrase("Products"));
-
-            cell.Colspan = dt.Columns.Count;
-            AddCellToHeader(table, "Account Number: 1501204392595001", Element.ALIGN_LEFT, colspan:3);
-            AddCellToHeader(table, "December 31, 2018", Element.ALIGN_RIGHT, colspan: 3);
-            AddCellToHeader(table, "STATEMENT OF ACCOUNT FOR THE PERIOD OF 11-JUN-2023 TO 12-JUN-2023 FROM FINACLE", Element.ALIGN_LEFT);
-            foreach (DataColumn c in dt.Columns)
+            using (iTextSharp.text.Document document = new iTextSharp.text.Document())
             {
-                AddCellToTableHeader(table, c.ColumnName);
-            }
-            foreach (DataRow r in dt.Rows)
-            {
-                if (dt.Rows.Count > 0)
+                using (PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(filePath_fileName, FileMode.Create)))
                 {
-                    for (int h = 0; h < dt.Columns.Count; h++)
+                    document.Open();
+
+                    PdfPTable table = new PdfPTable(dt.Columns.Count);
+                    PdfPRow row = null;
+                    float[] widths = new float[dt.Columns.Count];
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                        widths[i] = 4f;
+
+                    table.SetWidths(widths);
+
+                    table.WidthPercentage = 100;
+                    int iCol = 0;
+                    string colname = "";
+                    PdfPCell cell = new PdfPCell(new Phrase("Products"));
+
+                    cell.Colspan = dt.Columns.Count;
+                    AddCellToHeader(table, "Account Number: 1501204392595001", Element.ALIGN_LEFT, colspan: 3);
+                    AddCellToHeader(table, "December 31, 2018", Element.ALIGN_RIGHT, colspan: 3);
+                    AddCellToHeader(table, "STATEMENT OF ACCOUNT FOR THE PERIOD OF 11-JUN-2023 TO 12-JUN-2023 FROM FINACLE", Element.ALIGN_LEFT);
+                    foreach (DataColumn c in dt.Columns)
                     {
-                        AddCellToBody(table, r[h].ToString());
+                        AddCellToTableHeader(table, c.ColumnName);
                     }
+                    foreach (DataRow r in dt.Rows)
+                    {
+                        if (dt.Rows.Count > 0)
+                        {
+                            for (int h = 0; h < dt.Columns.Count; h++)
+                            {
+                                AddCellToBody(table, r[h].ToString());
+                            }
+                        }
+                    }
+                    document.Add(table);
+                    document.Close();
                 }
             }
-            document.Add(table);
-            document.Close();
         }
         private static void AddCellToHeader(PdfPTable tableLayout, string cellText, int alignElement, int colspan=12)
         {
